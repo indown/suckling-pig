@@ -1,0 +1,101 @@
+<template>
+  <view class="container">
+    <view class="nav-btn-wrap row center">
+      <view
+        class="btn column flex-center"
+        @tap="goTo({{index}})"
+        wx:for="{{buttonData}}"
+        wx:key="index"
+        wx:index="index"
+        wx:item="item">
+        <image style=" width: 80rpx; height: 80rpx;" mode="{{mode}}" src="{{item.src}}"></image>
+        <text
+          class="row center context"
+        >{{item.text}}</text>
+      </view>
+    </view>
+
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class Service extends wepy.page {
+    config = {
+      navigationBarTitleText: '服务'
+    }
+    components = {}
+    data = {
+      mode: 'scaleToFill',
+      buttonData: [
+        {
+          src: '../assets/img/service/electricity.png',
+          text: '电商'
+        },
+        {
+          src: '../assets/img/service/car.png',
+          text: '汽 车'
+        },
+        {
+          src: '../assets/img/service/life.png',
+          text: '生 活'
+        },
+        {
+          src: '../assets/img/service/game.png',
+          text: '游戏体验'
+        },
+        {
+          src: '../assets/img/service/leisure.png',
+          text: '休闲娱乐'
+        },
+        {
+          src: '../assets/img/service/attractions.png',
+          text: '旅游景点'
+        },
+        {
+          src: '../assets/img/service/task.png',
+          text: '任务指派'
+        },
+        {
+          src: '../assets/img/service/public_benefit.png',
+          text: '公益导图'
+        },
+        {
+          src: '../assets/img/service/other.png',
+          text: '其他服务'
+        }
+      ]
+    }
+    computed = {}
+
+    methods = {
+      goTo(index) {
+        wepy.navigateTo({url: `coupons`})
+      },
+      ddd() {
+        console.log(1)
+        this.mapCtx.moveToLocation()
+      }
+    }
+
+    events = {}
+
+    onLoad() {
+      this.mapCtx = wepy.createMapContext('map')
+      console.log(this.mapCtx)
+    }
+  }
+</script>
+<style lang="less">
+  .nav-btn-wrap{
+    flex-wrap:wrap;
+    .btn{
+      width: 100rpx;
+      margin: 70rpx;
+      .context{
+        font-size: 24rpx;
+      }
+    }
+
+  }
+</style>

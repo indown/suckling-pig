@@ -1,0 +1,14 @@
+<template>
+  <view></view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Impower extends wepy.page {
+    config = {
+      navigationBarTitleText: '小乳猪'
+    }
+  }
+</script>
+<style lang="less">
+
+</style>

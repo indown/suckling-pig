@@ -1,0 +1,206 @@
+<template>
+  <view class="container driver-approve">
+    <view class="id-card-upload row">
+      <view
+        wx:for="{{idCardData}}"
+        wx:item="item"
+        wx:index="index"
+        wx:key="index"
+        class="column"
+        style="margin: 10rpx 24rpx 0;"
+        @tap="showAction({{index}})"
+      >
+        <text>{{item.text}}</text>
+        <image
+          style="width: 320rpx;height:189rpx;"
+          src="{{item.src}}"></image>
+      </view>
+    </view>
+    <van-cell-group
+      class="row flex-center"
+      style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+    >
+      <van-field
+        style="flex:1;"
+        placeholder="请输入"
+        value="{{params.company_name}}"
+        label="公司名称"
+        input-align="right"
+        border="{{ false }}"
+        @change="onChange('company_name')"
+      />
+    </van-cell-group>
+    <van-cell-group
+      class="row flex-center"
+      style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+    >
+      <van-field
+        style="flex:1;"
+        placeholder="请输入"
+        value="{{params.company_address}}"
+        label="公司地址"
+        input-align="right"
+        border="{{ false }}"
+        @change="onChange('company_address')"
+      />
+    </van-cell-group>
+    <van-cell-group
+      class="row flex-center"
+      style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+    >
+      <van-field
+        style="flex:1;"
+        placeholder="请输入"
+        value="{{params.range}}"
+        label="运营范围"
+        input-align="right"
+        border="{{ false }}"
+        @change="onChange('range')"
+      />
+    </van-cell-group>
+    <van-cell-group
+      class="row flex-center"
+      style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+    >
+      <van-field
+        style="flex:1;"
+        placeholder="请输入"
+        value="{{params.legal_name}}"
+        label="法人姓名"
+        input-align="right"
+        border="{{ false }}"
+        @change="onChange('legal_name')"
+      />
+    </van-cell-group>
+    <van-cell-group
+      class="row flex-center"
+      style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+    >
+      <van-field
+        style="flex:1;"
+        placeholder="请输入"
+        value="{{params.phone}}"
+        label="联系电话"
+        input-align="right"
+        border="{{ false }}"
+        @change="onChange('phone')"
+      />
+    </van-cell-group>
+    <van-cell-group
+      class="row flex-center"
+      style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+    >
+      <van-field
+        style="flex:1;"
+        placeholder="请输入"
+        value="{{params.email}}"
+        label="邮箱"
+        input-align="right"
+        border="{{ false }}"
+        @change="onChange('email')"
+      />
+    </van-cell-group>
+    <button
+      class="submit-btn"
+      @tap="adMasterApprove">提交审核</button>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class AdMasterApprove extends wepy.page {
+    config = {
+      navigationBarTitleText: '广告主认证',
+      usingComponents: {
+        'van-field': '../vendors/vant-weapp/field/index'
+      }
+    }
+    async selectImage (type, index) {
+      let res = await wepy.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'],
+        sourceType: [type]
+      })
+      if (res.errMsg === 'chooseImage:ok') {
+        this.idCardData[index].src = res.tempFilePaths[0]
+        this.uploadFile(this.idCardData[index].src, index)
+        this.$apply()
+      }
+    }
+    async uploadFile(filePath, index) {
+      wepy.uploadFile({
+        url: 'https://xiaoruzhu.xq.hk/public/index.php/index/member/SetUpload',
+        filePath: filePath,
+        name: 'file'
+      })
+        .progress(res => {
+          console.log('上传进度', res.progress)
+          console.log('已经上传的数据长度', res.totalBytesSent)
+          console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
+        })
+        .then((res) => {
+          const tempData = JSON.parse(res.data)
+          if (index === 0) {
+            this.params.positive = tempData.file
+          } else if (index === 1) {
+            this.params.opposite = tempData.file
+          } else {
+            this.params.license = tempData.file
+          }
+        })
+    }
+    methods = {
+      onChange (name, e) {
+        this.params[name] = e.detail
+      },
+      async showAction(index) {
+        let res = await wepy.showActionSheet({
+          itemList: ['从相册中选择', '拍照'],
+          itemColor: '#f7982a'
+        })
+        if (res.tapIndex === 0) {
+          this.selectImage('album', index)
+        } else if (res.tapIndex === 1) {
+          this.selectImage('camera', index)
+        }
+      },
+      async adMasterApprove() {
+        let res = await wepy.$getData.adMasterApprove(this.params)
+        console.log(res)
+      }
+    }
+    data = {
+      idCardData: [
+        {
+          text: '身份证人像面',
+          src: '../assets/img/driver/id_card_positive.png'
+        },
+        {
+          text: '身份证人像面',
+          src: '../assets/img/driver/id_card_back.png'
+        },
+        {
+          text: '身份证人像面',
+          src: '../assets/img/driver/driver_license.png'
+        }
+      ],
+      params: {
+        positive: undefined,
+        opposite: undefined,
+        license: undefined,
+        company_name: '',
+        company_address: '',
+        range: '',
+        legal_name: '',
+        phone: '',
+        email: ''
+      }
+    }
+  }
+</script>
+<style lang="less">
+  .driver-approve{
+    .id-card-upload{
+      flex-wrap: wrap;
+    }
+  }
+</style>

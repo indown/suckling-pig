@@ -1,0 +1,109 @@
+<template>
+  <view class="withdrawal-record container">
+    <view class="withdrawal-record-wrap column">
+      <view
+        wx:for="{{arr}}"
+        wx:item="item"
+        wx:key="index"
+        wx:index="index"
+        class="record-item column space-between">
+       <view class="header row space-between">
+          <text class="title">提现</text>
+         <text class="amount">¥{{item.amount}}</text>
+       </view>
+        <view class="content row space-between">
+          <text class="date">{{item.date}}</text>
+          <text clsss="status">{{statusArr[item.status]}}</text>
+        </view>
+        <view class="footer">
+         <text>原因：</text>
+          <text>{{item.cause}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class WithdrawalRecord extends wepy.page {
+    config = {
+      navigationBarTitleText: '提现记录'
+    }
+    data = {
+      statusArr: [
+        '处理中',
+        '提现失败',
+        '成功'
+      ],
+      arr: [
+        {
+          status: 0,
+          cause: '您的收款账户信息有误！',
+          date: '2018-03-30   14:20',
+          amount: 300
+        },
+        {
+          status: 1,
+          cause: '您的收款账户信息有误！',
+          date: '2018-03-30   14:20',
+          amount: 300
+        },
+        {
+          status: 2,
+          cause: '您的收款账户信息有误！',
+          date: '2018-03-30   14:20',
+          amount: 300
+        },
+        {
+          status: 2,
+          cause: '您的收款账户信息有误！',
+          date: '2018-03-30   14:20',
+          amount: 300
+        }
+      ]
+    }
+  }
+</script>
+<style lang="less">
+  .withdrawal-record.container{
+    min-height: 100vh;
+    background: #f8f8f8;
+    padding: 25rpx;
+    .withdrawal-record-wrap{
+        width: 100%;
+      height: 100%;
+      .record-item{
+        box-sizing: border-box;
+        width: 702rpx;
+        height: 178rpx;
+        background-color: #ffffff;
+        border-radius: 10rpx;
+        margin-bottom: 10rpx;
+        padding: 10rpx;
+        .header{
+          .title{
+            font-size: 36rpx;
+            letter-spacing: 0px;
+            color: #7b7b7b;
+          }
+          .amount{
+            font-size: 36rpx;
+            letter-spacing: 0px;
+            color: #feac34;
+          }
+        }
+        .content{
+          font-size: 28rpx;
+          letter-spacing: 0px;
+          color: #8f8f8f;
+          border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+        .footer{
+          font-size: 28rpx;
+          letter-spacing: 0px;
+          color: #7b7b7b;
+        }
+      }
+    }
+  }
+</style>

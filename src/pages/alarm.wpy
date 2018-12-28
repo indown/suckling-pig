@@ -1,0 +1,121 @@
+<template>
+  <view class="alarm container">
+    <view class="alarm-wrap">
+        <view
+          wx:for="{{arr}}"
+          wx:item="item"
+          wx:key="index"
+          wx:index="index"
+          class="alarm-item column space-between">
+          <view class="row space-between">
+            <view class="status-tab-wrap">
+              <text class="row center flex-center status-tab {{item.status?'complete':''}}">{{statusArr[item.status]}}</text>
+            </view>
+            <text>{{item.number}}</text>
+          </view>
+          <view class="row">
+            <text>报警位置：</text>
+            <text>{{item.location}}</text>
+          </view>
+          <view class="row space-between flex-center">
+              <text>{{item.date}}</text>
+            <button class="row center flex-center {{item.status?'complete':''}}">{{buttonStatus[item.status]}}</button>
+          </view>
+        </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Alarm extends wepy.page {
+    config = {
+      navigationBarTitleText: '警报'
+    }
+    data = {
+      buttonStatus: [
+        '前往处理',
+        '已处理'
+      ],
+      statusArr: [
+        '未处理',
+        '已处理'
+      ],
+      arr: [
+        {
+          status: 0,
+          number: '皖A951F2（别克君威2017款2.0T）',
+          location: '安徽省合肥市长江西路与青阳路...',
+          date: '2018-9-12 12:29:08'
+        },
+        {
+          status: 1,
+          number: '皖A951F2（别克君威2017款2.0T）',
+          location: '安徽省合肥市长江西路与青阳路...',
+          date: '2018-9-12 12:29:08'
+        },
+        {
+          status: 0,
+          number: '皖A951F2（别克君威2017款2.0T）',
+          location: '安徽省合肥市长江西路与青阳路...',
+          date: '2018-9-12 12:29:08'
+        },
+        {
+          status: 1,
+          number: '皖A951F2（别克君威2017款2.0T）',
+          location: '安徽省合肥市长江西路与青阳路...',
+          date: '2018-9-12 12:29:08'
+        }
+      ]
+    }
+  }
+</script>
+<style lang="less">
+  .alarm{
+    min-height: 100vh;
+    background: #f8f8f8;
+    .alarm-wrap{
+      margin-top: 30rpx;
+      margin-left: 60rpx;
+      .alarm-item{
+        box-sizing: border-box;
+        padding: 30rpx 20rpx;
+        margin-bottom: 30rpx;
+        font-size: 26rpx;
+        width: 580rpx;
+        height: 226rpx;
+        background-color: #ffffff;
+        box-shadow: -1.2rpx 1.6rpx 24.6rpx 4.4rpx
+        rgba(85, 85, 85, 0.09);
+        border-radius: 5rpx;
+       .status-tab-wrap{
+         position: relative;
+         left: -30rpx;
+        .status-tab{
+          width: 132rpx;
+          height: 49rpx;
+          background-color: #ff624c;
+          border-radius: 5rpx;
+          border-top-right-radius: 25rpx;
+          border-bottom-right-radius: 25rpx;
+          &.complete{
+            background-color: #22ac38;
+          }
+        }
+       }
+
+        button{
+          width: 132rpx;
+          height: 49rpx;
+          border-radius: 5rpx;
+          line-height: 26rpx;
+          font-size: 26rpx;
+          color: #fff;
+          background-color: #22ac38;
+          &.complete{
+            background-color: #898989;
+          }
+        }
+      }
+    }
+  }
+</style>

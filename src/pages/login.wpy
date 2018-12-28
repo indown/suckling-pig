@@ -1,0 +1,52 @@
+<template>
+  <view>
+    <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="goLogin"> 获取用户信息</button>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的'
+    }
+    components = {}
+    data = {
+      code: ''
+    }
+    methods = {
+    }
+    events = {}
+    async goLogin(e) {
+      wepy.showLoading({
+        title: '加载中'
+      })
+      if (e.detail.userInfo) {
+        let params = {}
+        params.rawData = e.detail.rawData
+        params.signature = e.detail.signature
+        params.iv = e.detail.iv
+        params.encryptedData = e.detail.encryptedData
+        params.code = this.code
+        let loginRes = await wepy.$getData.login(params)
+        if (loginRes.code) {
+          wepy.setStorageSync('isLogin', 1)
+          wepy.setStorageSync('userInfo', loginRes.data)
+          wepy.setStorageSync('openid', loginRes.data.openid)
+          wepy.reLaunch({url: 'index'})
+        }
+      }
+    }
+    async onLoad() {
+      // let settingRes = await wepy.getSetting()
+      // if (settingRes.authSetting['scope.userInfo']) {
+      //   // let userInfo = await wepy.getUserInfo()
+      //   wepy.switchTab({url: 'index'})
+      // }
+      let loginRes = await wepy.login()
+      if (loginRes.code) {
+        this.code = loginRes.code
+      }
+    }
+}
+</script>

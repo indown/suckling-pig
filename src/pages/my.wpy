@@ -1,0 +1,208 @@
+<template>
+  <view class="my container">
+
+    <view class="user-info-wrap row">
+      <view class="user-info row flex-center">
+          <image class="user-icon" src="{{userInfo.img_url}}"></image>
+          <view class="user-name-wrap column">
+            <text>{{userInfo.nickname}}</text>
+            <text>UID:{{userInfo.id}}</text>
+          </view>
+      </view>
+    </view>
+    <view class="account-info column space-between">
+      <view class="account-header row space-between">
+        <view class="account-balance column">
+          <text>账户余额</text>
+          <text class="num">{{userInfo.frozen_money}}</text>
+        </view>
+        <view class="withdrawal column space-between flex-center">
+          <image style="width: 30rpx;height: 30rpx;" src="../assets/img/my/withdrawal_icon.png"></image>
+          <button class="btn row center flex-center">提现</button>
+        </view>
+      </view>
+      <view class="account-footer row space-between">
+        <view
+          class="btn column flex-center"
+          wx:for="{{buttonData}}"
+          wx:key="index"
+          wx:index="index"
+          wx:item="item"
+          @tap="goTo({{item.url}})"
+        >
+          <image style=" width: 90rpx; height: 90rpx;" mode="{{mode}}" src="{{item.src}}"></image>
+          <text
+            class="text row center"
+          >{{item.text}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="approve">
+      <view
+        @tap="goTo({{'driverApprove'}})"
+        class="approve-item driver row space-between flex-center">
+        <view class="left row flex-center">
+          <image src="../assets/img/my/driver_icon.png" style="width: 52rpx;height:40rpx;"></image>
+          <text>司机认证</text>
+        </view>
+        <view class="right">
+          <text>未认证</text>
+        </view>
+      </view>
+      <view
+        @tap="goTo({{'adMasterApprove'}})"
+        class="approve-item ad-master row space-between flex-center">
+        <view class="left row flex-center">
+          <image src="../assets/img/my/driver_icon.png" style="width: 52rpx;height:40rpx;"></image>
+          <text>广告主</text>
+        </view>
+        <view class="right">
+          <text>未申请</text>
+        </view>
+      </view>
+    </view>
+    <image
+      class="online-customer"
+      src="../assets/img/my/online_customer.png"
+      style="width: 193rpx;height: 72rpx;"></image>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class My extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的'
+    }
+    components = {}
+    data = {
+      userInfo: {
+
+      },
+      mode: 'scaleToFill',
+      buttonData: [
+        {
+          src: '../assets/img/my/alarm.png',
+          text: '警报',
+          url: 'alarm'
+        },
+        {
+          src: '../assets/img/my/ad.png',
+          text: '我的广告',
+          url: 'ad'
+        },
+        {
+          src: '../assets/img/my/card_bag.png',
+          text: '卡包',
+          url: 'cardBag'
+        }]
+    }
+    methods = {
+      goTo(e) {
+        wepy.navigateTo({url: `${e}`})
+      }
+    }
+    events = {}
+    onLoad() {
+      this.userInfo = wepy.getStorageSync('userInfo')
+      console.log(this.userInfo)
+      this.$apply()
+    }
+  }
+</script>
+<style lang="less">
+  .my{
+    background: #f8f8f8;
+    .user-info-wrap{
+      box-sizing: border-box;
+      background-image: linear-gradient(-17deg,
+      #ffaa33 0%,
+      #fbbc30 50%,
+      #fabe2f 57%,
+      #f6ce2c 100%);
+      width: 100%;
+      padding: 0 32rpx 80rpx;
+      height: 290rpx;
+      .user-info{
+        .user-icon{
+          width: 152rpx;
+          height:152rpx;
+          border-radius: 50%;
+          margin-right: 40rpx;
+        }
+        .user-name-wrap{
+          color: #fff;
+        }
+      }
+    }
+    .account-info{
+      box-sizing: border-box;
+      padding: 35rpx 46rpx;
+      width: 697rpx;
+      height: 387rpx;
+      background-color: #ffffff;
+      border-radius: 20px;
+      margin-top: -100rpx;
+      margin-bottom: 40rpx;
+      .account-header{
+        border-bottom: 1px solid #aaaaaa;
+        padding-bottom: 40rpx;
+        .account-balance{
+
+        }
+        .withdrawal{
+          .btn{
+            width: 120rpx;
+            height: 50rpx;
+            color: #fff;
+            font-size: 28rpx;
+            background-image: linear-gradient(-53deg,
+            #fead32 0%,
+            #f7cb2d 100%);
+            border-radius: 10px;
+          }
+        }
+      }
+      .account-footer{
+        .btn{
+          .text{
+            color:#000;
+            font-size: 24rpx;
+          }
+        }
+      }
+    }
+    .approve{
+      box-sizing: border-box;
+      width: 100%;
+      background: #fff;
+      .approve-item{
+        box-sizing: border-box;
+        font-size: 28rpx;
+        height: 100rpx;
+        border-bottom: 1px solid #aaaaaa;
+        padding: 0 36rpx;
+        .left{
+          text{
+            color: #000000;
+          }
+          image{
+            margin-right: 20rpx;
+          }
+        }
+        .right{
+          text{
+            color: #898989;
+          }
+        }
+      }
+    }
+    .online-customer{
+      position: fixed;
+      bottom: 80rpx;
+      left: 20rpx;
+    }
+  }
+
+</style>

@@ -1,0 +1,158 @@
+<style lang="less">
+  button{
+    padding: 0;
+    margin: 0;
+  }
+  button::after{
+    border:none;
+  }
+  input{
+    outline:none;
+    border:none;
+    list-style: none;
+  }
+  .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+  .row{
+    display: flex;
+    flex-direction: row;
+  }
+  .column{
+    display: flex;
+    flex-direction: column;
+  }
+  .center{
+    justify-content: center;
+  }
+  .flex-center{
+    align-items: center;
+  }
+  .flex-end{
+    align-items: flex-end;
+  }
+  .space-between{
+    justify-content: space-between;
+  }
+  .space-around{
+    justify-content: space-around;
+  }
+  .submit-btn{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #feac34;
+  }
+</style>
+
+<script>
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+
+  // import { setStore } from 'wepy-redux'
+  // import configStore from './store'
+
+  const getData = require('./server/getData')
+
+  wepy.$getData = getData
+  // const store = configStore()
+  // setStore(store)
+
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/index',   // 地图首页
+        'pages/adMasterApprove',  // 广告主认证页面
+        'pages/historyRecord', // 历史记录
+        'pages/withdrawalRecord', // 提现记录
+        'pages/coupons', // 优惠卷
+        'pages/alarm',   // 警报列表
+        'pages/my',      // 我的页面
+        'pages/service',  // 所有服务页面
+        'pages/login',    // 引导登录页面
+        'pages/driverApprove',   // 司机认证页面
+        'pages/alarmInfo'     // 警报处理详情页面
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#feab32',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'black'
+      },
+      tabBar: {
+        backgroundColor: '#ffffff',
+        selectedColor: '#feab32',
+        color: '#898989',
+        list: [{
+          pagePath: 'pages/index',
+          text: '首页',
+          iconPath: 'assets/img/tab-bar/general/index.png',
+          selectedIconPath: 'assets/img/tab-bar/active/index.png'
+        },
+        {
+          pagePath: 'pages/service',
+          text: '服务',
+          iconPath: 'assets/img/tab-bar/general/service.png',
+          selectedIconPath: 'assets/img/tab-bar/active/service.png'
+        },
+        {
+          pagePath: 'pages/my',
+          text: '我的',
+          iconPath: 'assets/img/tab-bar/general/my.png',
+          selectedIconPath: 'assets/img/tab-bar/active/my.png'
+        }]
+      }
+    }
+
+    globalData = {
+      userInfo: null
+    }
+
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+      this.intercept('request', {
+        config (p) {
+          console.log(p)
+          if (wepy.getStorageSync('isLogin')) {
+            p.header['openid'] = wepy.getStorageSync('openid')
+            p.data['openid'] = wepy.getStorageSync('openid')
+          }
+          return p
+        },
+        complete (p) {
+        }
+      })
+    }
+    async onLaunch() {
+      let sessionRes = await wepy.checkSession().then(res => { return true }, res => { return false })
+      console.log(sessionRes)
+      if (!sessionRes) {
+        wepy.reLaunch({url: '/pages/login'})
+      }
+      // // let res = await this.getUserInfo()
+      if (!wepy.getStorageSync('isLogin')) {
+        wepy.reLaunch({url: '/pages/login'})
+      }
+    }
+
+    getUserInfo(cb) {
+      const that = this
+      if (this.globalData.userInfo) {
+        return this.globalData.userInfo
+      }
+      wepy.getUserInfo({
+        success(res) {
+          that.globalData.userInfo = res.userInfo
+          cb && cb(res.userInfo)
+        }
+      })
+    }
+  }
+</script>

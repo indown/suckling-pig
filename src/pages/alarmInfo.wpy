@@ -1,0 +1,240 @@
+<style lang="less">
+  .alarm-info{
+    .alarm{
+      position: fixed;
+      top:10rpx;
+      right: 10rpx;
+      width: 158rpx;
+      height: 72rpx;
+      background-color: rgba(0,0,0,0.5);
+      border: solid 1px rgba(220, 221, 221, 0.8);
+      border-top-left-radius: 36rpx;
+      border-bottom-left-radius: 36rpx;
+      color: #fff;
+      .alarm-icon{
+        width: 49rpx;
+        height: 49rpx;
+      }
+    }
+    .btn{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      color: #6d6c6c;
+      background-color: #feac34;
+    }
+  }
+
+</style>
+<template>
+  <view class="alarm-info container">
+    <map id="map"
+         longitude="113.324520"
+         latitude="23.099994"
+         scale="16"
+         controls="{{controls}}"
+         bindcontroltap="controltap"
+         markers="{{markers}}"
+         bindmarkertap="markertap"
+         show-location
+         style="width: 100%; height: 100vh;">
+      <cover-view
+        @tap="ddd"
+      >
+        111
+      </cover-view>
+      <cover-view
+        class="alarm row flex-center space-around"
+        @tap="goTo({{'alarm'}})"
+      >
+        <cover-image class='alarm-icon' src='../assets/img/map/alarm.png'></cover-image>
+        <cover-view class='tip-text'>警报</cover-view>
+      </cover-view>
+    </map>
+    <button class="btn">处理</button>
+    <button class="btn">已处理</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class AlarmInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: '小乳猪',
+      navigationBarBackgroundColor: '#feab32'
+    }
+    components = {}
+    data = {
+      markers: [{
+        iconPath: '../assets/img/map/car.png',
+        id: 0,
+        latitude: 23.099994,
+        longitude: 113.324520,
+        width: 28,
+        height: 12,
+        callout: {
+          content: '0',
+          color: '#06a54d',
+          fontSize: '16',
+          borderRadius: '12',
+          bgColor: '#06a54d',
+          borderColor: '#ffffff',
+          borderWidth: '2',
+          display: 'ALWAYS'
+        }
+      }],
+      longitude: 113.3245211,
+      latitude: 23.10229
+    }
+
+    computed = {}
+
+    methods = {
+      ddd() {
+        this.moveToLocation()
+      },
+      goTo(e) {
+        wepy.navigateTo({url: `${e}`})
+      }
+    }
+
+    events = {}
+    async getAddress() {
+      let params = {
+        longitude: this.longitude,
+        latitude: this.latitude
+      }
+      let arr = {
+        '0': {
+          'code': 'P123456',
+          'address': {
+            'lng': 113.755493,
+            'lat': 23.00782
+          },
+          'police': 1
+        },
+        '1': {
+          'code': '15448151950',
+          'address': {
+            'lng': 113.738411,
+            'lat': 23.016729
+          },
+          'police': 1
+        },
+        '2': {
+          'code': '15448151950',
+          'address': {
+            'lng': 113.738411,
+            'lat': 23.016729
+          },
+          'police': 1
+        },
+        '3': {
+          'code': '15448151951',
+          'address': {
+            'lng': 113.745781,
+            'lat': 23.02689
+          },
+          'police': 1
+        },
+        '4': {
+          'code': '15448151952',
+          'address': {
+            'lng': 113.780586,
+            'lat': 23.034985
+          },
+          'police': 0
+        },
+        '5': {
+          'code': '15448151953',
+          'address': {
+            'lng': 113.754791,
+            'lat': 23.00938
+          },
+          'police': 1
+        },
+        '6': {
+          'code': '15448151954',
+          'address': {
+            'lng': 113.75499,
+            'lat': 23.00865
+          },
+          'police': 1
+        },
+        '7': {
+          'code': '15448151955',
+          'address': {
+            'lng': 113.73214,
+            'lat': 23.054239
+          },
+          'police': 0
+        },
+        '8': {
+          'code': '15448151956',
+          'address': {
+            'lng': 113.737396,
+            'lat': 23.033791
+          },
+          'police': 0
+        },
+        length: 9
+      }
+      console.log(Array.from(arr))
+      let addressRes = await wepy.$getData.getAddress(params)
+      if (1) {
+        this.markers = Array.from(arr).map(item => {
+          let temp = {
+            iconPath: '../assets/img/map/car.png',
+            id: 0,
+            latitude: 23.099994,
+            longitude: 113.324520,
+            width: 28,
+            height: 12,
+            callout: {
+              content: '0',
+              color: '#000000',
+              fontSize: '16',
+              borderRadius: '12',
+              bgColor: '#ffffff',
+              padding: 10,
+              borderColor: '#ffffff',
+              borderWidth: '2',
+              display: 'ALWAYS'
+            }
+          }
+          temp.longitude = item.address.lng
+          temp.latitude = item.address.lat
+          temp.id = item.code
+          item.police ? temp.callout.content = '有人' : temp.callout.content = '没人'
+          return temp
+        })
+        this.$apply()
+      }
+    }
+    // 移动
+    moveToLocation() {
+      this.mapCtx.moveToLocation()
+    }
+    async user() {
+      let res = await wepy.authorize({scope: 'scope.userLocation'})
+      console.log(res)
+    }
+    // 获取坐标
+    async getLocation () {
+      let locationRes = await wepy.getLocation({type: 'gcj02'})
+      console.log(locationRes)
+      if (locationRes.errMsg === '"getLocation:ok"') {
+        this.longitude = locationRes.longitude
+        this.latitude = locationRes.latitude
+      }
+    }
+    async onLoad() {
+      this.mapCtx = wepy.createMapContext('map')
+      this.getLocation()
+      this.moveToLocation()
+      this.getAddress()
+    }
+  }
+</script>

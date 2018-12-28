@@ -1,0 +1,176 @@
+<template>
+  <view class="coupons container">
+    <view class="merchants-wrap">
+        <view
+          class="merchants-item row space-between"
+          wx:for="{{merchantsArr}}"
+          wx:item="item"
+          wx:key="index"
+          wx:index="index"
+        >
+          <view class="left row">
+            <image
+              style="width: 140rpx;height:140rpx;margin-right: 20rpx;"
+              src="{{item.img}}"></image>
+            <view class="column center">
+              <text class="title">{{item.title}}</text>
+              <text class="describe">{{item.describe}}</text>
+            </view>
+          </view>
+          <view class="right column center">
+            <text class="distance">{{item.distance}}m</text>
+          </view>
+        </view>
+    </view>
+  </view>
+  <view class="bounced-wrap" wx:if="{{modalShow}}">
+     <view class="bounced">
+            <view class="header">
+              <van-icon @tap="closeModal"class="cross-icon" name="cross" size="30px"/>
+              <image src="../assets/img/my/ad.png"></image>
+            </view>
+            <view class="footer column flex-center">
+             <button
+               @tap="receive"
+               class="btn row center flex-center">点击领取</button>
+              <text class="tip">全场商品通用，最终解释权归官方</text>
+            </view>
+       </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Coupons extends wepy.page {
+    config = {
+      navigationBarTitleText: '优惠卷',
+      'usingComponents': {
+        'van-icon': '../vendors/vant-weapp/icon/index'
+      }
+    }
+    data = {
+      modalShow: true,
+      merchantsArr: [
+        {
+          img: '../assets/img/my/ad.png',
+          title: '世纪华联',
+          describe: '蜀山区人气榜单',
+          distance: '300'
+        },
+        {
+          img: '../assets/img/my/ad.png',
+          title: '世纪华联',
+          describe: '蜀山区人气榜单',
+          distance: '300'
+        }, {
+          img: '../assets/img/my/ad.png',
+          title: '世纪华联',
+          describe: '蜀山区人气榜单',
+          distance: '300'
+        }, {
+          img: '../assets/img/my/ad.png',
+          title: '世纪华联',
+          describe: '蜀山区人气榜单',
+          distance: '300'
+        }, {
+          img: '../assets/img/my/ad.png',
+          title: '世纪华联',
+          describe: '蜀山区人气榜单',
+          distance: '300'
+        }, {
+          img: '../assets/img/my/ad.png',
+          title: '世纪华联',
+          describe: '蜀山区人气榜单',
+          distance: '300'
+        }
+      ]
+    }
+    methods = {
+      closeModal() {
+        this.modalShow = false
+      },
+      receive() {
+        this.modalShow = false
+      }
+    }
+  }
+</script>
+<style lang="less">
+  .coupons.container{
+    background: #f8f8f8;
+    min-height: 100vh;
+    .merchants-wrap{
+      width: 100%;
+      .merchants-item{
+        width: 100%;
+        box-sizing: border-box;
+        padding: 30rpx;
+        height: 200rpx;
+        background: #fff;
+        margin-bottom: 8rpx;
+        .title{
+          color: #000000;
+          font-size: 36rpx;
+          margin-bottom: 30rpx;
+        }
+        .describe{
+          font-size: 24rpx;
+          letter-spacing: 0px;
+          color: #898989;
+        }
+        .distance{
+          font-size: 28rpx;
+          letter-spacing: 1.7rpx;
+          color: #898989
+        }
+      }
+    }
+  }
+  .bounced-wrap{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.3);
+    .bounced{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -270rpx;
+      margin-top: -315rpx;
+      width: 545rpx;
+      height: 630rpx;
+      background-color: #ffffff;
+      border-radius: 10rpx;
+      .header{
+        margin-bottom: 10rpx;
+        image{
+          width: 547rpx;
+          height: 470rpx;
+        }
+        .cross-icon{
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+      }
+      .footer{
+        .btn{
+          width: 328rpx;
+          height: 65rpx;
+          background: #ffaa33;
+          border-radius: 30rpx;
+          font-size: 32rpx;
+          color: #fdfcfc;
+          margin-bottom: 10rpx;
+        }
+        .tip{
+          font-size: 20rpx;
+          letter-spacing: 0.4px;
+          color: #9f9f9f;
+        }
+      }
+
+    }
+  }
+</style>

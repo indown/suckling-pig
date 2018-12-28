@@ -1,0 +1,292 @@
+<template>
+<view class="container driver-approve">
+  <view class="{{!model?' ':'hidden'}}">
+  <view class="id-card-upload row">
+      <view
+        wx:for="{{idCardData}}"
+        wx:item="item"
+        wx:index="index"
+        wx:key="index"
+        class="column"
+        @tap="showAction({{index}})"
+        style="margin: 10rpx 24rpx 0;"
+      >
+        <text>{{item.text}}</text>
+        <image
+          style="width: 320rpx;height:189rpx;"
+          src="{{item.src}}"></image>
+      </view>
+  </view>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <image src="../assets/img/driver/name_icon.png" style="width: 70rpx;height: 70rpx;"></image>
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.username}}"
+      label="本人姓名"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('username')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <image src="../assets/img/driver/phone_icon.png" style="width: 70rpx;height: 70rpx;"></image>
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.phone1}}"
+      label="手机号1"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('phone1')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <image src="../assets/img/driver/phone_icon.png" style="width: 70rpx;height: 70rpx;"></image>
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.phone2}}"
+      label="手机号2"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('phone2')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <image src="../assets/img/driver/address_icon.png" style="width: 70rpx;height: 70rpx;"></image>
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.live_address}}"
+      label="现居住地"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('live_address')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <image src="../assets/img/driver/id_card_icon.png" style="width: 70rpx;height: 70rpx;"></image>
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.identity_code}}"
+      label="身份证号"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('identity_code')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+    @tap="showModel"
+  >
+    <image src="../assets/img/driver/driver_icon.png" style="width: 70rpx;height: 70rpx;"></image>
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.first_time}}"
+      label="初次领证日期"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('first_time')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.vehicle_license}}"
+      label="车牌号"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('vehicle_license')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.vehicle_code}}"
+      label="车型号"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('vehicle_code')"
+    />
+  </van-cell-group>
+  <van-cell-group
+    class="row flex-center"
+    style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+  >
+    <van-field
+      style="flex:1;"
+      placeholder="请输入"
+      value="{{params.vehicle_color}}"
+      label="车辆颜色"
+      input-align="right"
+      border="{{ false }}"
+      @change="onChange('vehicle_color')"
+    />
+  </van-cell-group>
+
+  </view>
+  <view
+    class="{{model?'':'hidden'}}"
+    style="position: fixed; width: 100vw;height: 100vh;background: #fff;">
+    <van-datetime-picker
+      type="date"
+      min-date="{{ minDate }}"
+      @change="onChange('first_time')"
+      @confirm="getDate"
+    />
+  </view>
+</view>
+
+  <button
+    class="submit-btn"
+    @tap="driverApprove">提交审核</button>
+</template>
+<script>
+ import wepy from 'wepy'
+export default class DriverApprove extends wepy.page {
+   config = {
+     navigationBarTitleText: '司机认证',
+     usingComponents: {
+       'van-field': '../vendors/vant-weapp/field/index',
+       'van-datetime-picker': '../vendors/vant-weapp/datetime-picker/index'
+     }
+   }
+   async selectImage (type, index) {
+     let res = await wepy.chooseImage({
+       count: 1,
+       sizeType: ['original', 'compressed'],
+       sourceType: [type]
+     })
+     if (res.errMsg === 'chooseImage:ok') {
+       this.idCardData[index].src = res.tempFilePaths[0]
+       this.uploadFile(this.idCardData[index].src, index)
+       this.$apply()
+     }
+   }
+   async uploadFile(filePath, index) {
+     wepy.uploadFile({
+       url: 'https://xiaoruzhu.xq.hk/public/index.php/index/member/SetUpload',
+       filePath: filePath,
+       name: 'file'
+     })
+      .progress(res => {
+        console.log('上传进度', res.progress)
+        console.log('已经上传的数据长度', res.totalBytesSent)
+        console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
+      })
+      .then((res) => {
+        const tempData = JSON.parse(res.data)
+        if (index === 0) {
+          this.params.positive = tempData.file
+        } else if (index === 1) {
+          this.params.opposite = tempData.file
+        } else {
+          this.params.license = tempData.file
+        }
+      })
+   }
+   methods = {
+     showModel() {
+       this.model = true
+     },
+     getDate(event) {
+       let date = new Date(event.detail)
+       let Y = date.getFullYear() + '-'
+       let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+       let D = date.getDate() + ' '
+       this.params.first_time = Y + M + D
+       this.model = false
+     },
+     onChange (name, e) {
+       if (name === 'first_time') {
+       } else {
+         this.params[name] = e.detail
+       }
+     },
+     async showAction(index) {
+       let res = await wepy.showActionSheet({
+         itemList: ['从相册中选择', '拍照'],
+         itemColor: '#f7982a'
+       })
+       if (res.tapIndex === 0) {
+         this.selectImage('album', index)
+       } else if (res.tapIndex === 1) {
+         this.selectImage('camera', index)
+       }
+     },
+     async driverApprove() {
+       let res = await wepy.$getData.driverApprove(this.params)
+       console.log(res)
+     }
+   }
+   data = {
+     model: false,
+     params: {
+       positive: undefined,
+       opposite: undefined,
+       license: undefined,
+       username: '',
+       phone1: '',
+       phone2: '',
+       live_address: '',
+       identity_code: '',
+       first_time: '',
+       vehicle_license: '',
+       vehicle_code: '',
+       vehicle_color: ''
+     },
+     idCardData: [
+       {
+         text: '身份证人像面',
+         src: '../assets/img/driver/id_card_positive.png'
+       },
+       {
+         text: '身份证人像面',
+         src: '../assets/img/driver/id_card_back.png'
+       },
+       {
+         text: '身份证人像面',
+         src: '../assets/img/driver/driver_license.png'
+       }
+     ]
+   }
+}
+</script>
+<style lang="less">
+  .hidden{
+    display: none;
+  }
+.driver-approve{
+  padding-bottom: 100rpx;
+  .id-card-upload{
+    flex-wrap: wrap;
+  }
+}
+</style>

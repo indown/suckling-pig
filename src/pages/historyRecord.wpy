@@ -1,0 +1,92 @@
+<template>
+  <view class="history-record container">
+    <view class="history-record-wrap column">
+      <view
+        wx:for="{{arr}}"
+        wx:item="item"
+        wx:key="index"
+        wx:index="index"
+        class="record-item column space-between">
+        <view class="header row space-between">
+          <text class="start-date">{{item.date}}</text>
+          <text class="status">{{statusArr[item.status]}}</text>
+        </view>
+        <view class="content column">
+          <text>上车地点：{{item.start}}</text>
+          <text>目的地：{{item.destination}}</text>
+          <text>出发时间：{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class HistoryRecord extends wepy.page {
+    config = {
+      navigationBarTitleText: '历史记录'
+    }
+    data = {
+      statusArr: [
+        '已送达',
+        '提现失败',
+        '成功'
+      ],
+      arr: [
+        {
+          status: 0,
+          start: '长江路与潜山路交叉口！',
+          date: '2018-03-30   14:20',
+          destination: '长江路与金牛路交叉口松枝万象城'
+        },
+        {
+          status: 0,
+          start: '长江路与潜山路交叉口！',
+          date: '2018-03-30   14:20',
+          destination: '长江路与金牛路交叉口松枝万象城'
+        }, {
+          status: 0,
+          start: '长江路与潜山路交叉口！',
+          date: '2018-03-30   14:20',
+          destination: '长江路与金牛路交叉口松枝万象城'
+        }, {
+          status: 0,
+          start: '长江路与潜山路交叉口！',
+          date: '2018-03-30   14:20',
+          destination: '长江路与金牛路交叉口松枝万象城'
+        }
+      ]
+    }
+  }
+</script>
+<style lang="less">
+  .history-record.container{
+    min-height: 100vh;
+    background: #f8f8f8;
+    padding: 25rpx;
+    .history-record-wrap{
+      width: 100%;
+      height: 100%;
+      .record-item{
+        font-size: 28rpx;
+        color: #7b7b7b;
+        box-sizing: border-box;
+        width: 702rpx;
+        background-color: #ffffff;
+        border-radius: 10rpx;
+        margin-bottom: 10rpx;
+        padding: 14rpx;
+        .header{
+          .start-date{
+            font-size: 24rpx;
+            color: #8f8f8f;
+          }
+          .status{
+            color: #3da40a;
+          }
+        }
+
+      }
+    }
+  }
+</style>
