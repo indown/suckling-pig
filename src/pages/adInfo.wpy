@@ -1,0 +1,88 @@
+<template>
+  <view class="driver-recruitment container">
+    <view class="driver-info-wrap">
+      <view class="driver-info">
+        <view class="title">广告主信息</view>
+        <view class="row space-between">
+          <view class="dirver-info-content column">
+            <text>张三</text>
+            <text>181****1234</text>
+            <text>广东小乳猪科技有限公司</text>
+          </view>
+          <view class="column flex-center center">
+            <image style="width: 50rpx;height: 50rpx;" src="../assets/img/driver/phone_icon.png"></image>
+            <text>已认证</text>
+          </view>
+        </view>
+      </view>
+      <view class="ad-info-wrap">
+        <view class="title">投放信息</view>
+        <view class="row space-between flex-center">
+          <view class="content column">
+            <text>型号：TDF3327（正常）</text>
+            <text>押金：20元</text>
+          </view>
+          <view class="column">
+            <text>投放中</text>
+            <text style="color:#1871d0;">续费</text>
+          </view>
+        </view>
+        <view class="row center">
+          <button
+            @tap="goTo"
+            class="scan-code-btn row flex-center center">投放广告</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class AdInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: '广告主'
+    }
+    data = {
+      code: ''
+    }
+    methods = {
+      goTo() {
+        wepy.navigateTo({url: 'adPut'})
+      }
+    }
+    events = {}
+  }
+</script>
+<style lang="less">
+  .driver-recruitment{
+    background: #f8f8f8;
+    min-height: 100vh;
+    font-size: 30rpx;
+    .driver-info-wrap{
+      .driver-info,.ad-info-wrap{
+        box-sizing: border-box;
+        width: 716rpx;
+        background-color: #ffffff;
+        border-radius: 20rpx;
+        padding: 30rpx;
+        margin-bottom: 20rpx;
+        text{
+          margin: 10rpx;
+        }
+        .title{
+          border-bottom: 1px solid rgba(0,0,0,.3);
+          margin-bottom: 20rpx;
+        }
+        .scan-code-btn{
+          width: 320rpx;
+          height: 68rpx;
+          background-color: #ffaa33;
+          border-radius: 10rpx;
+          margin-top: 20rpx;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+</style>

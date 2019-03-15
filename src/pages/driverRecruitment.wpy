@@ -1,0 +1,89 @@
+<template>
+  <view class="driver-recruitment container">
+    <view class="driver-info-wrap">
+      <view class="driver-info">
+            <view class="title">司机信息</view>
+        <view class="row space-between">
+          <view class="dirver-info-content column">
+             <text>张三</text>
+             <text>340823********0021</text>
+             <text>京N5DT96</text>
+           </view>
+            <view class="column flex-center center">
+              <image style="width: 50rpx;height: 50rpx;" src="../assets/img/driver/phone_icon.png"></image>
+              <text>已认证</text>
+            </view>
+        </view>
+      </view>
+      <view class="ad-info-wrap">
+        <view class="title">投屏信息</view>
+        <view class="row space-between flex-center">
+          <view class="content column">
+            <text>型号：TDF3327（正常）</text>
+            <text>押金：20元</text>
+          </view>
+          <text style="color:#1871d0;">申请解绑</text>
+        </view>
+        <view class="row center">
+          <button
+            @tap="scanCode"
+            class="scan-code-btn row flex-center center">扫码绑定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class DriverRecruitment extends wepy.page {
+    config = {
+      navigationBarTitleText: '司机招募'
+    }
+    data = {
+      code: ''
+    }
+    methods = {
+      scanCode() {
+        wepy.scanCode().then(res => {
+          console.log(res)
+        }, res => {
+          console.log(res)
+        })
+      }
+    }
+    events = {}
+  }
+</script>
+<style lang="less">
+  .driver-recruitment{
+    background: #f8f8f8;
+    min-height: 100vh;
+    font-size: 30rpx;
+    .driver-info-wrap{
+      .driver-info,.ad-info-wrap{
+        box-sizing: border-box;
+        width: 716rpx;
+        background-color: #ffffff;
+        border-radius: 20rpx;
+        padding: 30rpx;
+        margin-bottom: 20rpx;
+        text{
+          margin: 10rpx;
+        }
+        .title{
+         border-bottom: 1px solid rgba(0,0,0,.3);
+          margin-bottom: 20rpx;
+        }
+        .scan-code-btn{
+          width: 320rpx;
+          height: 68rpx;
+          background-color: #ffaa33;
+          border-radius: 10rpx;
+          margin-top: 20rpx;
+          color: #ffffff;
+        }
+      }
+      }
+    }
+</style>

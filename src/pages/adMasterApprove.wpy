@@ -166,6 +166,9 @@
       async adMasterApprove() {
         let res = await wepy.$getData.adMasterApprove(this.params)
         console.log(res)
+        if (res.code) {
+          wepy.reLaunch({url: 'my'})
+        }
       }
     }
     data = {

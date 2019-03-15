@@ -39,25 +39,25 @@
     </view>
     <view class="approve">
       <view
-        @tap="goTo({{'driverApprove'}})"
+        @tap="goTo({{'driver'}})"
         class="approve-item driver row space-between flex-center">
         <view class="left row flex-center">
           <image src="../assets/img/my/driver_icon.png" style="width: 52rpx;height:40rpx;"></image>
           <text>司机认证</text>
         </view>
         <view class="right">
-          <text>未认证</text>
+          <text>{{driverStatus[userInfo.authentication]}}</text>
         </view>
       </view>
       <view
-        @tap="goTo({{'adMasterApprove'}})"
+        @tap="goTo({{'ad'}})"
         class="approve-item ad-master row space-between flex-center">
         <view class="left row flex-center">
           <image src="../assets/img/my/driver_icon.png" style="width: 52rpx;height:40rpx;"></image>
           <text>广告主</text>
         </view>
         <view class="right">
-          <text>未申请</text>
+          <text>{{driverStatus[userInfo.authentication]}}</text>
         </view>
       </view>
     </view>
@@ -80,6 +80,16 @@
       userInfo: {
 
       },
+      driverStatus: [
+        '未认证',
+        '认证中',
+        '发布招募'
+      ],
+      adStatus: [
+        '未认证',
+        '认证中',
+        '发布广告'
+      ],
       mode: 'scaleToFill',
       buttonData: [
         {
@@ -100,13 +110,28 @@
     }
     methods = {
       goTo(e) {
-        wepy.navigateTo({url: `${e}`})
+        if (e === 'driver') {
+          if (this.userInfo.authentication === 0) {
+            wepy.navigateTo({url: 'driverApprove'})
+          } else if (this.userInfo.authentication === 1) {
+            wepy.navigateTo({url: 'driverRecruitment'})
+          }
+        } else if (e === 'ad') {
+          if (this.userInfo.role === 0) {
+            wepy.navigateTo({url: 'adMasterApprove'})
+          } else if (this.userInfo.role === 1) {
+            wepy.navigateTo({url: 'adInfo'})
+          }
+        }
+        // wepy.navigateTo({url: `${e}`})
       }
     }
     events = {}
     onLoad() {
       this.userInfo = wepy.getStorageSync('userInfo')
-      console.log(this.userInfo)
+      wepy.$getData.getMyInfo().then(res => {
+        console.log(res)
+      })
       this.$apply()
     }
   }

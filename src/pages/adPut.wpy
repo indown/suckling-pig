@@ -1,0 +1,267 @@
+<template>
+  <view class="ad-put">
+    <view class="{{model0||model1||model2?'hidden':''}}">
+      <view class="content-item column">
+        <view class="title row flex-center">投放信息</view>
+        <van-cell-group
+          class="row flex-center"
+          style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+        >
+          <van-field
+            style="flex:1;"
+            placeholder="请输入"
+            value="{{params.arrdess}}"
+            label="投放区域："
+            input-align="right"
+            border="{{ false }}"
+            @tap="showModel(0)"
+          />
+        </van-cell-group>
+        <van-cell-group
+          class="row flex-center"
+          style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+        >
+          <van-field
+            style="flex:1;"
+            placeholder="请输入"
+            value="{{params.account}}"
+            label="本人姓名"
+            input-align="right"
+            border="{{ false }}"
+            @change="onChange('account')"
+          />
+        </van-cell-group>
+        <van-cell-group
+          class="row flex-center"
+          style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+        >
+          <van-field
+            style="flex:1;"
+            placeholder="开始时间"
+            value="{{params.startTime}}"
+            label="投放时间："
+            input-align="right"
+            border="{{ false }}"
+            @tap="showModel(1)"
+          />
+          <van-field
+            style="flex:1;"
+            placeholder="结束时间"
+            value="{{params.endTime}}"
+            label="至"
+            input-align="left"
+            border="{{ false }}"
+            @tap="showModel(2)"
+          />
+        </van-cell-group>
+      </view>
+      <view class="content-item column">
+        <view class="title row flex-center">投放信息</view>
+        <van-cell-group
+          class="row flex-center"
+          style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+        >
+          <van-field
+            style="flex:1;"
+            placeholder="请输入"
+            value="{{params.adTitle}}"
+            label="广告标题："
+            input-align="right"
+            border="{{ false }}"
+            @change="onChange('adTitle')"
+          />
+        </van-cell-group>
+        <view class="upload-image" style="padding-left: 20rpx; background: #fff;">
+          <view>投放图片：</view>
+          <view class="image-wrap">
+            <image
+              wx:for="{{images}}"
+              wx:item="item"
+              wx:index="index"
+              wx:key="index"
+              style="width: 147rpx;height:155rpx;margin-right: 10rpx;"
+              src="{{item}}"
+            ></image>
+          </view>
+          <view
+            @tap="showAction"
+            class="row center flex-center"
+            style="border:1px solid #ddd;width: 147rpx;height: 155rpx;">上传图片</view>
+        </view>
+        <van-cell-group
+          class="row flex-center"
+          style="width: 100%;border-bottom: 1px solid #aaaaaa;"
+        >
+          <van-field
+            style="flex:1;"
+            placeholder="请输入"
+            value="{{params.adContent}}"
+            label="广告描述:"
+            input-align="right"
+            border="{{ false }}"
+            @change="onChange('adContent')"
+          />
+        </van-cell-group>
+      </view>
+    </view>
+    <van-area
+      class="{{model0?'':'hidden'}}"
+      area-list="{{ areaList }}"
+      @confirm=""
+      value="110101" />
+    <view
+      class="{{model1?'':'hidden'}}"
+      style="position: fixed; width: 100vw;height: 100vh;background: #fff;">
+      <van-datetime-picker
+        type="datetime"
+        min-date="{{ minDate }}"
+        @confirm="getDate('startTime')"
+      />
+    </view>
+    <view
+      class="{{model2?'':'hidden'}}"
+      style="position: fixed; width: 100vw;height: 100vh;background: #fff;">
+      <van-datetime-picker
+        type="datetime"
+        min-date="{{ minDate }}"
+        @confirm="getDate('endTime')"
+      />
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  // import Toast from '../vendors/vant-weapp/toast/toast'
+
+  export default class AdPut extends wepy.page {
+    config = {
+      navigationBarTitleText: '广告信息',
+      usingComponents: {
+        'van-area': '../vendors/vant-weapp/area/index',
+        'van-field': '../vendors/vant-weapp/field/index',
+        'van-datetime-picker': '../vendors/vant-weapp/datetime-picker/index'
+      }
+    }
+    data = {
+      model0: false,
+      model1: false,
+      model2: false,
+      minDate: new Date().getTime(),
+      columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+      areaList: {
+        province_list: {
+          110000: '北京市',
+          120000: '天津市'
+        },
+        city_list: {
+          110100: '北京市',
+          110200: '县',
+          120100: '天津市',
+          120200: '县'
+        },
+        county_list: {
+          110101: '东城区',
+          110102: '西城区',
+          110105: '朝阳区',
+          110106: '丰台区',
+          120101: '和平区',
+          120102: '河东区',
+          120103: '河西区',
+          120104: '南开区',
+          120105: '河北区'
+        }
+      },
+      params: {
+        address: '',
+        account: '',
+        startTime: '',
+        endTime: '',
+        adTitle: '',
+        adContent: '',
+        images: []
+      },
+      images: []
+    }
+    async selectImage (type) {
+      let res = await wepy.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'],
+        sourceType: [type]
+      })
+      if (res.errMsg === 'chooseImage:ok') {
+        this.images.push(res.tempFilePaths[0])
+        this.uploadFile(res.tempFilePaths[0])
+        this.$apply()
+      }
+    }
+    async uploadFile(filePath, index) {
+      wepy.uploadFile({
+        url: 'https://xiaoruzhu.xq.hk/public/index.php/index/member/SetUpload',
+        filePath: filePath,
+        name: 'file'
+      })
+        .progress(res => {
+          console.log('上传进度', res.progress)
+          console.log('已经上传的数据长度', res.totalBytesSent)
+          console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
+        })
+        .then((res) => {
+          const tempData = JSON.parse(res.data)
+          this.params.images.push = tempData.file
+        })
+    }
+    methods = {
+      onChange (name, e) {
+        this.params[name] = e.detail
+      },
+      showModel(index) {
+        let name = 'model' + index
+        this[name] = true
+      },
+      closeModel(index) {
+        let name = 'model' + index
+        this[name] = false
+      },
+      getDate(name, event) {
+        let date = new Date(event.detail)
+        let Y = date.getFullYear() + '-'
+        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+        let D = date.getDate() + ' '
+        this.params[name] = Y + M + D
+        this.model1 = false
+        this.model2 = false
+      },
+      async showAction() {
+        let res = await wepy.showActionSheet({
+          itemList: ['从相册中选择', '拍照'],
+          itemColor: '#f7982a'
+        })
+        if (res.tapIndex === 0) {
+          this.selectImage('album')
+        } else if (res.tapIndex === 1) {
+          this.selectImage('camera')
+        }
+      }
+    }
+    events = {}
+  }
+</script>
+<style lang="less">
+  .ad-put{
+    background: #f8f8f8;
+    min-height: 100vh;
+    font-size: 30rpx;
+    .content-item{
+      width: 100%;
+      .title{
+        height: 80rpx;
+        background-color: #feab32;
+        color: #ffffff;
+        padding-left: 20rpx;
+      }
+    }
+  }
+  .hidden{
+    display: none;
+  }
+</style>

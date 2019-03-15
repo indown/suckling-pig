@@ -109,84 +109,8 @@
         longitude: this.longitude,
         latitude: this.latitude
       }
-      let arr = {
-        '0': {
-          'code': 'P123456',
-          'address': {
-            'lng': 113.755493,
-            'lat': 23.00782
-          },
-          'police': 1
-        },
-        '1': {
-          'code': '15448151950',
-          'address': {
-            'lng': 113.738411,
-            'lat': 23.016729
-          },
-          'police': 1
-        },
-        '2': {
-          'code': '15448151950',
-          'address': {
-            'lng': 113.738411,
-            'lat': 23.016729
-          },
-          'police': 1
-        },
-        '3': {
-          'code': '15448151951',
-          'address': {
-            'lng': 113.745781,
-            'lat': 23.02689
-          },
-          'police': 1
-        },
-        '4': {
-          'code': '15448151952',
-          'address': {
-            'lng': 113.780586,
-            'lat': 23.034985
-          },
-          'police': 0
-        },
-        '5': {
-          'code': '15448151953',
-          'address': {
-            'lng': 113.754791,
-            'lat': 23.00938
-          },
-          'police': 1
-        },
-        '6': {
-          'code': '15448151954',
-          'address': {
-            'lng': 113.75499,
-            'lat': 23.00865
-          },
-          'police': 1
-        },
-        '7': {
-          'code': '15448151955',
-          'address': {
-            'lng': 113.73214,
-            'lat': 23.054239
-          },
-          'police': 0
-        },
-        '8': {
-          'code': '15448151956',
-          'address': {
-            'lng': 113.737396,
-            'lat': 23.033791
-          },
-          'police': 0
-        },
-        length: 9
-      }
-      // console.log(Array.from(arr))
-      // let addressRes = await wepy.$getData.getAddress(params)
-      this.markers = Array.from(arr).map(item => {
+      let addressRes = await wepy.$getData.getAddress(params)
+      this.markers = addressRes.data.map(item => {
         let temp = {
           iconPath: '../assets/img/map/car.png',
           id: 0,

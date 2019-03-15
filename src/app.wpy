@@ -67,6 +67,9 @@
     config = {
       pages: [
         'pages/index',   // 地图首页
+        'pages/adPut', // 广告投放信息
+        'pages/adInfo', // 广告主
+        'pages/driverRecruitment', // 司机招募
         'pages/adMasterApprove',  // 广告主认证页面
         'pages/historyRecord', // 历史记录
         'pages/withdrawalRecord', // 提现记录
@@ -122,6 +125,9 @@
           console.log(p)
           if (wepy.getStorageSync('isLogin')) {
             p.header['openid'] = wepy.getStorageSync('openid')
+            if (!p.data) {
+              p.data = {}
+            }
             p.data['openid'] = wepy.getStorageSync('openid')
           }
           return p
